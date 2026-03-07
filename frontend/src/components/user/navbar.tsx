@@ -12,13 +12,13 @@ export function Navbar() {
 					<div className="flex items-center gap-6">
 						<a 
 							href="/" 
-							className="text-[var(--color_red)] hover:text-gray-100 transition-colors duration-200 font-medium"
+							className="text-[var(--color_red)] hover:text-[var(--color_red_tinted)] px-3 py-2 rounded-lg hover:bg-[var(--color_white_tinted)] transition-colors duration-200 font-medium"
 						>
 							Home
 						</a>
 						<a 
 							href="/submitRequest" 
-							className="bg-[var(--color_red)] text-[var(--color_white)] px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-all duration-200 shadow-md hover:shadow-lg"
+							className="bg-[var(--color_red)] text-[var(--color_white)] px-4 py-2 rounded-lg font-medium hover:bg-[var(--color_red_tinted)] transition-all duration-200 shadow-md hover:shadow-lg"
 						>
 							Submit Form
 						</a>
