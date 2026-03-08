@@ -37,6 +37,9 @@ export async function GET(request) {
     });
 
     const features = {
+      pads_last_month: pads_last_4_weeks,
+      pads_2_months_ago: Math.max(0, pads_last_4_weeks - 2),
+      pads_3_months_ago: Math.max(0, pads_last_4_weeks - 4),
       pads_last_4_weeks,
       flagged_cases_last_4_weeks,
       high_urgency_last_4_weeks,
