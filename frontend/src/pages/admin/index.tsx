@@ -13,7 +13,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (isLoggedIn && typeof window !== "undefined") {
       const code = accessCode.trim().toUpperCase();
-      setCampUrl(`${window.location.origin}/test/camp?code=${encodeURIComponent(code)}`);
+      setCampUrl(`${window.location.origin}/user/landing?code=${encodeURIComponent(code)}`);
     }
   }, [isLoggedIn, accessCode]);
 
