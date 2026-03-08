@@ -1,11 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function TestPage() {
   const [campAccessCode, setCampAccessCode] = useState("");
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [accessCodeError, setAccessCodeError] = useState("");
+
+  // Read ?code= from QR code URL and auto-unlock
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    if (code) {
+      setCampAccessCode(code.toUpperCase());
+      setIsUnlocked(true);
+    }
+  }, []);
 
   const [userId, setUserId] = useState("user_123");
   const [location, setLocation] = useState("Camp A - Block 3");
