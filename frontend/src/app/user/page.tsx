@@ -9,27 +9,31 @@ export default function Home() {
 		<SuperButton name="Manage group" path="/group" variant={1}></SuperButton>
 	</></Navbar>
 
-	<h1 className="text-red-700 py-5 rounded-lg font-sans font-bold text-2xl border-1-4 pl-3 mb-6">
+	<h1 className="text-red-700 text-center pt-3 rounded-lg font-sans font-bold text-2xl border-1-4 pl-3 mb-6">
 		Periods don't stop in a crisis.
 	</h1>
-	<p className="text-gray-700 text-base font-sans">
+	<p className="text-gray-700 text-base text-center leading-relaxed mb-5 font-sans">
 		AIDWAY aims to deliver period products during humanitarian disasters. Find out how to help.
 	</p>
 
-	<p className="text-red-700 rounded-lg font-sans text-base">To register with us...</p>
-	<ol className="text-red-700 rounded-lg font-sans text-base">
-		<li>1. Users in a camp must register with a charity.</li>
-		<li>2. A charity should register with us, and they will receive an access code.</li>
-		<li>3. Each camp will have a unique access code.</li>
-		<li>4. All users in different camps will be able to submit a request form to request what products will be need.</li>
+	<div className="bg-white border border-red-200 rounded-xl p-6 mb-6 shadow-sm">
+	<h2 className="text-red-700 rounded-lg font-semibold text-lg">To register with us...</h2>
+	<ol className="list-decimal list-inside space-y-3 text-red-800">
+		<li>Users in a camp must register with a charity.</li>
+		<li>A charity should register with us, and they will receive an access code.</li>
+		<li>Each camp will have a unique access code.</li>
+		<li>All users in different camps will be able to submit a request form.</li>
 	</ol>
+	</div>
 
-	<p className="text-red-700 pt-3 rounded-lg font-sans text-base"> After registration...</p>
-	<ol className="text-red-700 rounded-lg font-sans text-base">
-		<li>1. After each camp receives an access code, each camp will be assigned a camp correspondent.</li>
-		<li>2. The camp correspondent will ensure that each user on the camp receives the products they requested.</li>
-		<li>3. When products are ordered, they will be delivered on a monthly basis.</li>
+	<div className="bg-white border border-red-200 rounded-xl p-6 mb-6 shadow-sm">
+	<h2 className="text-red-700 rounded-lg font-semibold text-lg"> After registration...</h2>
+	<ol className="list-decimal list-inside space-y-3 text-red-800">
+		<li>After each camp receives an access code, each camp will be assigned a camp correspondent.</li>
+		<li>The camp correspondent will ensure that each user on the camp receives the products they requested.</li>
+		<li>When products are ordered, they will be delivered on a monthly basis.</li>
 	</ol>
+	</div>
 
 </>
 );}
