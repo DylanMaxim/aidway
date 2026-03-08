@@ -19,10 +19,22 @@ export function Navbar() {
 							Home
 						</a>
 						<a 
-							href="/submitRequest" 
+							href="http://user.localhost:3000" 
 							className="bg-[var(--color_red)] text-[var(--color_white)] px-4 py-2 rounded-lg font-medium hover:bg-[var(--color_red_tinted)] transition-all duration-200 shadow-md hover:shadow-lg"
 						>
-							Submit Form
+							Request Help
+						</a>
+						<a 
+							href="http://admin.localhost:3000"
+							className="bg-[var(--color_red)] text-[var(--color_white)] px-4 py-2 rounded-lg font-medium hover:bg-[var(--color_red_tinted)] transition-all duration-200 shadow-md hover:shadow-lg"
+						>
+							Group dashboard
+						</a>
+						<a 
+							href="http://charity.localhost:3000" 
+							className="bg-[var(--color_red)] text-[var(--color_white)] px-4 py-2 rounded-lg font-medium hover:bg-[var(--color_red_tinted)] transition-all duration-200 shadow-md hover:shadow-lg"
+						>
+							Charity dashboard
 						</a>
 					</div>
 				</div>

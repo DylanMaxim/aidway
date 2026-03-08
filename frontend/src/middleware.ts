@@ -6,7 +6,7 @@ import { getValidSubdomain } from '@/utils/subdomain';
 // RegExp for public files
 const PUBLIC_FILE = /\.(.*)$/; // Files
 
-const SUBDOMAINS = ["user", "admin"];
+const SUBDOMAINS = ["user", "charity"];
 
 export async function middleware(req: NextRequest) {
 	// Clone the URL
@@ -15,9 +15,13 @@ export async function middleware(req: NextRequest) {
 	//   // Skip public files
 	//   if (PUBLIC_FILE.test(url.pathname) || url.pathname.includes('_next')) return;
 
+	console.log(url);
+
 	const hostname = req.headers.get('host');
 	const subdomain = getValidSubdomain(hostname);
 
+	// check for denied page
+	if (false) {}
 
 	if (!subdomain) {
 		return NextResponse.next();
