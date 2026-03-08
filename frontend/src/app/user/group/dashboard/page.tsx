@@ -8,7 +8,7 @@ export default function Dashboard() {
 	return (
 <>
 	<Navbar>
-		<SuperButton name="Log out" path="/logout" variant={0}/>
+		<SuperButton name="Log out" path="/group/logout" variant={0}/>
 	</Navbar>
 
 
