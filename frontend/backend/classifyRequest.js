@@ -1,6 +1,22 @@
 import { PRODUCT_CATALOG } from "./catalog";
+import { classifyWithOllama } from "./classifyWithOllama";
 
-export async function classifyRequest(userText) {
+const DEFAULT_RESULT = {
+  catalogItems: ["Hygiene kit"],
+  urgency: "low",
+  flagged: false
+};
+
+const COMPLEX_KEYWORDS = [
+  "severe",
+  "heavy bleeding",
+  "infection",
+  "dizzy",
+  "weak",
+  "unusual discharge"
+];
+
+export function heuristicClassifyRequest(userText) {
   const text = String(userText || "").toLowerCase();
   const catalogSet = new Set();
   let urgency = "low";
@@ -54,11 +70,7 @@ export async function classifyRequest(userText) {
   }
 
   if (catalogSet.size === 0) {
-    return {
-      catalogItems: ["Hygiene kit"],
-      urgency: "low",
-      flagged: false
-    };
+    return { ...DEFAULT_RESULT };
   }
 
   const catalogItems = PRODUCT_CATALOG.filter((item) => catalogSet.has(item));
@@ -68,4 +80,32 @@ export async function classifyRequest(userText) {
     urgency,
     flagged
   };
+}
+
+function shouldTryOllama(userText, heuristicResult) {
+  const text = String(userText || "").toLowerCase();
+  const isDefaultOnly =
+    heuristicResult.catalogItems.length === 1 &&
+    heuristicResult.catalogItems[0] === "Hygiene kit" &&
+    heuristicResult.urgency === "low" &&
+    heuristicResult.flagged === false;
+
+  const hasComplexSymptoms = COMPLEX_KEYWORDS.some((keyword) => text.includes(keyword));
+
+  return isDefaultOnly || hasComplexSymptoms;
+}
+
+export async function classifyRequest(userText) {
+  const heuristicResult = heuristicClassifyRequest(userText);
+
+  if (!shouldTryOllama(userText, heuristicResult)) {
+    return heuristicResult;
+  }
+
+  try {
+    return await classifyWithOllama(userText);
+  } catch (error) {
+    console.error("Ollama classification failed, falling back to heuristic:", error);
+    return heuristicResult;
+  }
 }
