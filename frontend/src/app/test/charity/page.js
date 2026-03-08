@@ -9,6 +9,7 @@ export default function CharityPage() {
   const [charityName, setCharityName] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const [generatedCode, setGeneratedCode] = useState("");
   const [campId, setCampId] = useState("");
@@ -30,6 +31,14 @@ export default function CharityPage() {
     const code = value.toString(16).toUpperCase().padStart(6, "0");
     setGeneratedCode(code);
     setCampId(code);
+    setCopied(false);
+  }
+
+  function copyCode() {
+    if (!generatedCode) return;
+    navigator.clipboard.writeText(generatedCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   async function handleSummaryFetch(event) {
@@ -229,7 +238,31 @@ export default function CharityPage() {
               <button style={styles.button} type="button" onClick={generateCampAccessCode}>
                 Generate Camp Access Code
               </button>
-              <div style={styles.codeBox}>{generatedCode || "No code generated yet"}</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12 }}>
+                <div style={{ ...styles.codeBox, marginTop: 0, flex: 1 }}>
+                  {generatedCode || "No code generated yet"}
+                </div>
+                {generatedCode && (
+                  <button
+                    type="button"
+                    onClick={copyCode}
+                    style={{
+                      background: copied ? "#166534" : "#ffffff",
+                      color: copied ? "#ffffff" : "#111827",
+                      border: "1px solid #d1d5db",
+                      borderRadius: 8,
+                      padding: "8px 14px",
+                      fontSize: 14,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                      transition: "background 0.2s, color 0.2s",
+                    }}
+                  >
+                    {copied ? "Copied!" : "Copy"}
+                  </button>
+                )}
+              </div>
             </div>
 
             <div style={styles.card}>
