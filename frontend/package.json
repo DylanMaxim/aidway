@@ -10,11 +10,13 @@
     "train:model": "python3 backend/train_pad_model.py"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "bcrypt": "^6.0.0",
     "firebase-admin": "^13.7.0",
     "leaflet": "^1.9.4",
     "next": "16.1.6",
     "opentelemetry": "^0.1.0",
+    "qrcode": "^1.5.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-leaflet": "^5.0.0"
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "19.2.14",
     "@types/react-dom": "^19",
     "eslint": "^9",
