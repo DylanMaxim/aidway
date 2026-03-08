@@ -1,0 +1,221 @@
+"use client";
+
+import { useState } from "react";
+
+export default function TestPage() {
+  const [campAccessCode, setCampAccessCode] = useState("");
+  const [isUnlocked, setIsUnlocked] = useState(false);
+
+  const [userId, setUserId] = useState("user_123");
+  const [location, setLocation] = useState("Camp A - Block 3");
+  const [anonymous, setAnonymous] = useState(true);
+  const [userText, setUserText] = useState("I need pads and underwear.");
+  const [submitResponse, setSubmitResponse] = useState(null);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    const payload = {
+      userId,
+      location,
+      anonymous,
+      userText,
+      campAccessCode: campAccessCode.trim()
+    };
+
+    const res = await fetch("/api/submit-request", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    setSubmitResponse(data);
+  }
+
+  function handleContinue(event) {
+    event.preventDefault();
+    if (campAccessCode.trim()) {
+      setCampAccessCode(campAccessCode.trim().toUpperCase());
+      setIsUnlocked(true);
+    }
+  }
+
+  const styles = {
+    page: {
+      minHeight: "100vh",
+      background: "#f5f5f5",
+      color: "#1f2937",
+      padding: "32px 16px",
+      fontFamily: "Arial, sans-serif"
+    },
+    container: {
+      maxWidth: 720,
+      margin: "0 auto"
+    },
+    title: {
+      margin: "0 0 20px 0",
+      fontSize: 30,
+      lineHeight: 1.2
+    },
+    card: {
+      background: "#ffffff",
+      border: "1px solid #e5e7eb",
+      borderRadius: 10,
+      padding: 20
+    },
+    sectionTitle: {
+      margin: "0 0 14px 0",
+      fontSize: 22
+    },
+    field: {
+      marginBottom: 14
+    },
+    label: {
+      display: "block",
+      marginBottom: 6,
+      fontSize: 14,
+      fontWeight: 600
+    },
+    input: {
+      width: "100%",
+      boxSizing: "border-box",
+      padding: "10px 12px",
+      border: "1px solid #d1d5db",
+      borderRadius: 8,
+      fontSize: 15
+    },
+    textarea: {
+      width: "100%",
+      boxSizing: "border-box",
+      padding: "10px 12px",
+      border: "1px solid #d1d5db",
+      borderRadius: 8,
+      fontSize: 15,
+      minHeight: 120,
+      resize: "vertical"
+    },
+    checkboxRow: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      marginBottom: 14
+    },
+    button: {
+      width: "100%",
+      background: "#111827",
+      color: "#ffffff",
+      border: "none",
+      borderRadius: 8,
+      padding: "11px 14px",
+      fontSize: 15,
+      fontWeight: 600,
+      cursor: "pointer"
+    },
+    activeCode: {
+      margin: "0 0 14px 0",
+      padding: "8px 10px",
+      borderRadius: 8,
+      background: "#f3f4f6",
+      border: "1px solid #e5e7eb",
+      fontSize: 14
+    },
+    responseLabel: {
+      margin: "18px 0 8px 0",
+      fontSize: 16
+    },
+    responseBox: {
+      padding: 12,
+      background: "#f3f4f6",
+      border: "1px solid #e5e7eb",
+      borderRadius: 8,
+      overflowX: "auto"
+    },
+    pre: {
+      margin: 0,
+      whiteSpace: "pre-wrap",
+      wordBreak: "break-word",
+      fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+      fontSize: 13
+    }
+  };
+
+  return (
+    <div style={styles.page}>
+      <div style={styles.container}>
+        <h1 style={styles.title}>Request Workflow Test</h1>
+
+        <div style={styles.card}>
+          {!isUnlocked ? (
+            <form onSubmit={handleContinue}>
+              <h2 style={styles.sectionTitle}>Camp Access</h2>
+              <div style={styles.field}>
+                <label style={styles.label}>Camp Access Code</label>
+                <input
+                  style={styles.input}
+                  value={campAccessCode}
+                  onChange={(e) => setCampAccessCode(e.target.value)}
+                />
+              </div>
+              <button style={styles.button} type="submit">
+                Continue
+              </button>
+            </form>
+          ) : (
+            <>
+              <h2 style={styles.sectionTitle}>Submit Request</h2>
+              <p style={styles.activeCode}>Using camp code: {campAccessCode}</p>
+
+              <form onSubmit={handleSubmit}>
+                <div style={styles.field}>
+                  <label style={styles.label}>User ID</label>
+                  <input
+                    style={styles.input}
+                    value={userId}
+                    onChange={(e) => setUserId(e.target.value)}
+                  />
+                </div>
+
+                <div style={styles.field}>
+                  <label style={styles.label}>Location</label>
+                  <input
+                    style={styles.input}
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                  />
+                </div>
+
+                <div style={styles.checkboxRow}>
+                  <input
+                    type="checkbox"
+                    checked={anonymous}
+                    onChange={(e) => setAnonymous(e.target.checked)}
+                  />
+                  <label style={{ fontSize: 14, fontWeight: 600 }}>Anonymous</label>
+                </div>
+
+                <div style={styles.field}>
+                  <label style={styles.label}>User Text</label>
+                  <textarea
+                    style={styles.textarea}
+                    value={userText}
+                    onChange={(e) => setUserText(e.target.value)}
+                  />
+                </div>
+
+                <button style={styles.button} type="submit">
+                  Submit Request
+                </button>
+              </form>
+
+              <h3 style={styles.responseLabel}>Submit Response</h3>
+              <div style={styles.responseBox}>
+                <pre style={styles.pre}>{JSON.stringify(submitResponse, null, 2)}</pre>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
