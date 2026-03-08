@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Navbar } from "@/components/default/navbar"
+
 
 interface Message {
     role: "user" | "assistant"
@@ -105,7 +105,7 @@ export default function ChatbotPage() {
 
     return (
         <main className="min-h-screen bg-gray-50 flex flex-col">
-            <Navbar />
+
 
             {/* Page header */}
             <div className="bg-white border-b border-gray-200 px-6 py-4">

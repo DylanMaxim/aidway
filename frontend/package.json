@@ -10,6 +10,7 @@
     "train:model": "python3 backend/train_pad_model.py"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "firebase-admin": "^13.7.0",
     "leaflet": "^1.9.4",
     "next": "16.1.6",
