@@ -9,22 +9,24 @@ export default function Home() {
 		<SuperButton name="Manage group" path="/group" variant={1}></SuperButton>
 	</></Navbar>
 
-	<h2 className="text-red py-5 rounded-lg font-sans font-semibold text-xl">Periods don't stop in a crisis.</h2>
-	<p>AIDWAY aims to deliver period products during humanitarian disasters. Find out how to help.</p>
+	<h1 className="text-red-700 py-5 rounded-lg font-sans font-bold text-2xl border-1-4 pl-3 mb-6">
+		Periods don't stop in a crisis.
+	</h1>
+	<p className="text-red-700 py-3 font-sans">AIDWAY aims to deliver period products during humanitarian disasters. Find out how to help.</p>
 
-	<p className="text-red py-3 rounded-lg font-sans text-base">To register with us...</p>
-	<ol className="text-red py-3 rounded-lg font-sans text-base">
+	<p className="text-red-700 rounded-lg font-sans text-base">To register with us...</p>
+	<ol className="text-red-700 rounded-lg font-sans text-base">
 		<li>1. Users in a camp must register with a charity.</li>
 		<li>2. A charity should register with us, and they will receive an access code.</li>
 		<li>3. Each camp will have a unique access code.</li>
 		<li>4. All users in different camps will be able to submit a request form to request what products will be need.</li>
 	</ol>
 
-	<p className="text-red py-3 rounded-lg font-sans text-base"> After registration...</p>
-	<ol className="text-red py-3 rounded-lg font-sans text-base">
+	<p className="text-red-700 pt-3 rounded-lg font-sans text-base"> After registration...</p>
+	<ol className="text-red-700 rounded-lg font-sans text-base">
 		<li>1. After each camp receives an access code, each camp will be assigned a camp correspondent.</li>
 		<li>2. The camp correspondent will ensure that each user on the camp receives the products they requested.</li>
-		<li>When products are ordered, they will be delivered on a monthly basis.</li>
+		<li>3. When products are ordered, they will be delivered on a monthly basis.</li>
 	</ol>
 
 </>
