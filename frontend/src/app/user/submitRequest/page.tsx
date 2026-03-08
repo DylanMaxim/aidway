@@ -1,10 +1,13 @@
 "use client"
 
 import { useState, useRef, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Navbar } from '@/components/default/navbar'
 import { SuperButton } from '@/components/default/button'
 
 export default function SubmitRequestPage() {
+	const router = useRouter()
+	const searchParams = useSearchParams()
 	const [step, setStep] = useState(1)
 	const [code, setCode] = useState('')
 	const [loading, setLoading] = useState(false)
@@ -12,6 +15,21 @@ export default function SubmitRequestPage() {
 	const [textInput, setTextInput] = useState('')
 	const [isListening, setIsListening] = useState(false)
 	const recognitionRef = useRef<any>(null)
+
+	// Check URL for existing ID on mount
+	useEffect(() => {
+		if (!searchParams) return;
+
+		const urlId = searchParams.get('id')
+		if (urlId) {
+			// Validate ID format (XXX-XXX)
+			const formattedId = urlId.toUpperCase()
+			if (/^[A-Z0-9]{3}-[A-Z0-9]{3}$/.test(formattedId)) {
+				setCode(formattedId)
+				setStep(2) // Skip to step 2
+			}
+		}
+	}, [searchParams])
 
 	// Initialize speech recognition
 	useEffect(() => {
@@ -58,10 +76,14 @@ export default function SubmitRequestPage() {
 		setCode(value)
 	}
 
-	// Verify code with endpoint
+	// Verify code with endpoint and update URL
 	const handleCodeSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setError('')
+
+		// Update URL with the code
+		router.push(`/submitRequest?id=${code}`, { scroll: false })
+		
 		setStep(2)
 		return
 
@@ -76,6 +98,7 @@ export default function SubmitRequestPage() {
 			})
 			const data = await response.json()
 			if (data.valid) {
+				router.push(`/submitRequest?id=${code}`, { scroll: false })
 				setStep(2)
 			} else {
 				setError('Invalid code. Please try again.')
@@ -119,7 +142,8 @@ export default function SubmitRequestPage() {
 
 			if (response.ok) {
 				alert('Form submitted successfully!')
-				// Reset form
+				// Reset form and remove URL parameter
+				router.push('/submitRequest')
 				setStep(1)
 				setCode('')
 				setTextInput('')
@@ -129,6 +153,13 @@ export default function SubmitRequestPage() {
 		} finally {
 			setLoading(false)
 		}
+	}
+
+	// Go back to step 1 and clear URL parameter
+	const handleBackToCode = () => {
+		router.push('/submitRequest')
+		setStep(1)
+		setCode('')
 	}
 
 	return (
@@ -176,14 +207,15 @@ export default function SubmitRequestPage() {
 						// Step 2: Text Input with Speech-to-Text
 						<div>
 							<button
-								onClick={() => setStep(1)}
+								onClick={handleBackToCode}
 								className="text-[var(--color_red)] mb-4 hover:underline"
 							>
 								← Back to code entry
 							</button>
 
 							<h1 className="text-2xl font-bold text-gray-800 mb-2">Describe Your Request</h1>
-							<p className="text-gray-600 mb-6">Type or speak your request details</p>
+							<p className="text-gray-600 mb-4">Type or speak your request details</p>
+							<p className="text-sm text-gray-500 mb-6">Code: <span className="font-mono font-bold">{code}</span></p>
 
 							<form onSubmit={handleFormSubmit}>
 								<div className="mb-4">
