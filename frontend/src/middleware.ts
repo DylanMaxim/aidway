@@ -18,6 +18,7 @@ export async function middleware(req: NextRequest) {
 	const hostname = req.headers.get('host');
 	const subdomain = getValidSubdomain(hostname);
 
+
 	if (!subdomain) {
 		return NextResponse.next();
 	}
@@ -32,3 +33,16 @@ export async function middleware(req: NextRequest) {
 
 	return NextResponse.next();
 }
+
+export const config = {
+	matcher: [
+		/*
+		 * Match all request paths except:
+		 * - _next/static (static files)
+		 * - _next/image (image optimization files)
+		 * - favicon.ico (favicon file)
+		 * - public files (public folder)
+		 */
+		'/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+	],
+};

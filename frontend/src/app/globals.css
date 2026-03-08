@@ -1,10 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #e61313;
+  --background: #ffffff;
   --foreground: #171717;
+
+  --color_white: #ffffff;
+  --color_white_tinted: #dfdfdf;
+
   --color_red: #FF4E3E;
-  --color_red_tinted: #DA4134;
+  --color_red_tinted: #c43022;
   --color_purple: #B656DD;
   --color_purple_tinted: #8E42AD;
 }
@@ -17,22 +21,14 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  /* :root {
     --background: #0a0a0a;
     --foreground: #ededed;
-  }
+  } */
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-}
-
-
-/* ===== LAYOUT CSS ===== */
-
-.layout_navbar {
-  width: 100%;
-  background-color: var(--color_red);
 }
