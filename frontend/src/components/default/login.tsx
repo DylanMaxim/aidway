@@ -199,6 +199,9 @@ export function Correspondent_Login() {
 	const [error, setError] = useState('')
 	const [showPassword, setShowPassword] = useState(false)
 
+	const [accessCode, setAccessCode] = useState("")
+	const [confirmPassword, setConfirmPassword] = useState("")
+
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
 			const correspondentID = localStorage.getItem("correspondentID")
@@ -231,6 +234,43 @@ export function Correspondent_Login() {
 			}
 		} catch (err) {
 			setError('Something went wrong. Please try again.')
+		} finally {
+			setLoading(false)
+		}
+	}
+
+	const handleActivate = async (e: React.FormEvent) => {
+		e.preventDefault()
+
+		if (password !== confirmPassword) {
+			alert("Passwords do not match")
+			return
+		}
+
+		setLoading(true)
+
+		try {
+			const res = await fetch("/api/activate-account", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					accessCode,
+					password
+				})
+			})
+
+			const data = await res.json()
+
+			if (!res.ok) {
+				alert(data.error || "Activation failed")
+				return
+			}
+
+			alert("Account activated!")
+
+		} catch (err) {
+			console.error(err)
+			alert("Something went wrong")
 		} finally {
 			setLoading(false)
 		}
@@ -340,6 +380,107 @@ export function Correspondent_Login() {
 								'Sign In'
 							)}
 						</button>
+					</form>
+
+					
+					{/* Divider */}
+					<div className="mt-8 mb-6 flex items-center">
+						<div className="flex-1 border-t border-gray-300"></div>
+						<span className="px-4 text-sm text-gray-500">OR</span>
+						<div className="flex-1 border-t border-gray-300"></div>
+					</div>
+							
+					<p className='mb-2 font-bold'>Activate correspondent account</p>
+
+					<form onSubmit={handleActivate}>
+						<div className="space-y-4">
+
+							{/* Access Code */}
+							<div>
+								<label
+									htmlFor="access_code"
+									className="block text-sm font-semibold text-gray-700 mb-2"
+								>
+									One time access code
+								</label>
+
+								<input
+									id="access_code"
+									type="text"
+									value={accessCode}
+									onChange={(e) => {
+										let value = e.target.value.replace(/[^A-Za-z0-9]/g, "").toUpperCase()
+
+										if (value.length > 4) {
+											value = value.slice(0, 4) + "-" + value.slice(4, 8)
+										}
+
+										setAccessCode(value)
+									}}
+									placeholder="XXXX-XXXX"
+									maxLength={9}
+									className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[var(--color_red)] focus:outline-none transition-colors"
+									required
+								/>
+							</div>
+
+							{/* Password */}
+							<div>
+								<label
+									htmlFor="password"
+									className="block text-sm font-semibold text-gray-700 mb-2"
+								>
+									Password
+								</label>
+
+								<input
+									id="password"
+									type="password"
+									value={password}
+									onChange={(e) => setPassword(e.target.value)}
+									placeholder="Enter your password"
+									className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[var(--color_red)] focus:outline-none transition-colors"
+									required
+								/>
+							</div>
+
+							{/* Confirm Password */}
+							<div>
+								<label
+									htmlFor="confirm_password"
+									className="block text-sm font-semibold text-gray-700 mb-2"
+								>
+									Confirm password
+								</label>
+
+								<input
+									id="confirm_password"
+									type="password"
+									value={confirmPassword}
+									onChange={(e) => setConfirmPassword(e.target.value)}
+									placeholder="Re-enter your password"
+									className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[var(--color_red)] focus:outline-none transition-colors"
+									required
+								/>
+							</div>
+
+							{/* Activate Button */}
+							<button
+								type="submit"
+								disabled={loading || password !== confirmPassword}
+								className="w-full bg-[var(--color_red)] text-white py-3 rounded-lg font-semibold hover:bg-[var(--color_red_tinted)] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+							>
+								{loading ? (
+									<span className="flex items-center justify-center gap-2">
+										<span className="animate-spin">⏳</span>
+										Activating...
+									</span>
+								) : (
+									"Activate Account"
+								)}
+							</button>
+
+						</div>
 					</form>
 
 					{/* Divider */}
