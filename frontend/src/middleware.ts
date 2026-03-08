@@ -6,7 +6,7 @@ import { getValidSubdomain } from '@/utils/subdomain';
 // RegExp for public files
 const PUBLIC_FILE = /\.(.*)$/; // Files
 
-const SUBDOMAINS = ["user", "charity"];
+const SUBDOMAINS = ["user", "groups", "charity"];
 
 export async function middleware(req: NextRequest) {
 	// Clone the URL
