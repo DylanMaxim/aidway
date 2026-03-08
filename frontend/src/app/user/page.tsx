@@ -12,7 +12,9 @@ export default function Home() {
 	<h1 className="text-red-700 py-5 rounded-lg font-sans font-bold text-2xl border-1-4 pl-3 mb-6">
 		Periods don't stop in a crisis.
 	</h1>
-	<p className="text-red-700 py-3 font-sans">AIDWAY aims to deliver period products during humanitarian disasters. Find out how to help.</p>
+	<p className="text-gray-700 text-base font-sans">
+		AIDWAY aims to deliver period products during humanitarian disasters. Find out how to help.
+	</p>
 
 	<p className="text-red-700 rounded-lg font-sans text-base">To register with us...</p>
 	<ol className="text-red-700 rounded-lg font-sans text-base">
