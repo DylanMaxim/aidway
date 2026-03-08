@@ -6,10 +6,11 @@ import { useState } from "react";
 const CampMap = dynamic(() => import("./CampMap"), { ssr: false });
 
 export default function CharityPage() {
-  const [charityName, setCharityName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [loginError, setLoginError] = useState("");
 
   const [generatedCode, setGeneratedCode] = useState("");
   const [campId, setCampId] = useState("");
@@ -21,14 +22,28 @@ export default function CharityPage() {
 
   function handleLogin(event) {
     event.preventDefault();
-    if (charityName.trim() && password.trim()) {
+    if (email.trim() === "charity@lei.ac.uk" && password === "password123") {
       setIsLoggedIn(true);
+      setLoginError("");
+    } else {
+      setLoginError("Invalid charity credentials");
     }
   }
 
   function generateCampAccessCode() {
     const value = Math.floor(Math.random() * 0xffffff);
     const code = value.toString(16).toUpperCase().padStart(6, "0");
+
+    try {
+      const rawCodes = localStorage.getItem("validCampAccessCodes");
+      const existingCodes = rawCodes ? JSON.parse(rawCodes) : [];
+      const codeSet = new Set(Array.isArray(existingCodes) ? existingCodes : []);
+      codeSet.add(code);
+      localStorage.setItem("validCampAccessCodes", JSON.stringify([...codeSet]));
+    } catch (error) {
+      console.error("Failed to store access code:", error);
+    }
+
     setGeneratedCode(code);
     setCampId(code);
     setCopied(false);
@@ -115,6 +130,11 @@ export default function CharityPage() {
       marginBottom: 6,
       fontSize: 14,
       fontWeight: 600
+    },
+    errorText: {
+      color: "#dc2626",
+      margin: "0 0 12px 0",
+      fontSize: 14
     },
     input: {
       width: "100%",
@@ -208,11 +228,11 @@ export default function CharityPage() {
               <h2 style={styles.sectionTitle}>Charity Login</h2>
 
               <div style={styles.field}>
-                <label style={styles.label}>Charity Name</label>
+                <label style={styles.label}>Email</label>
                 <input
                   style={styles.input}
-                  value={charityName}
-                  onChange={(e) => setCharityName(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
 
@@ -229,6 +249,8 @@ export default function CharityPage() {
               <button style={styles.button} type="submit">
                 Login
               </button>
+
+              {loginError ? <p style={styles.errorText}>{loginError}</p> : null}
             </form>
           </div>
         ) : (

@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react"
 
-
 interface Message {
     role: "user" | "assistant"
     text: string
@@ -105,7 +104,6 @@ export default function ChatbotPage() {
 
     return (
         <main className="min-h-screen bg-gray-50 flex flex-col">
-
 
             {/* Page header */}
             <div className="bg-white border-b border-gray-200 px-6 py-4">

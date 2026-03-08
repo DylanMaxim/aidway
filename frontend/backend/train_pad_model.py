@@ -7,6 +7,9 @@ from sklearn.linear_model import LinearRegression
 
 
 FEATURES = [
+    "pads_last_month",
+    "pads_2_months_ago",
+    "pads_3_months_ago",
     "pads_last_4_weeks",
     "flagged_cases_last_4_weeks",
     "high_urgency_last_4_weeks",

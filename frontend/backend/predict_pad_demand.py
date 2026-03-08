@@ -9,6 +9,9 @@ import pandas as pd
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--camp_id", required=True)
+    parser.add_argument("--pads_last_month", required=True, type=float)
+    parser.add_argument("--pads_2_months_ago", required=True, type=float)
+    parser.add_argument("--pads_3_months_ago", required=True, type=float)
     parser.add_argument("--pads_last_4_weeks", required=True, type=float)
     parser.add_argument("--flagged_cases_last_4_weeks", required=True, type=float)
     parser.add_argument("--high_urgency_last_4_weeks", required=True, type=float)
@@ -28,6 +31,9 @@ def main():
     row = pd.DataFrame(
         [
             {
+                "pads_last_month": args.pads_last_month,
+                "pads_2_months_ago": args.pads_2_months_ago,
+                "pads_3_months_ago": args.pads_3_months_ago,
                 "pads_last_4_weeks": args.pads_last_4_weeks,
                 "flagged_cases_last_4_weeks": args.flagged_cases_last_4_weeks,
                 "high_urgency_last_4_weeks": args.high_urgency_last_4_weeks,
