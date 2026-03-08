@@ -58,7 +58,7 @@ export function Charity_Login() {
 				<div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
 					{/* Logo */}
 					<div className="flex justify-center mb-6">
-						<Image 
+						<Image
 							src='/Logo_Horizontal_wtext.svg'
 							alt="AIDWAY Logo"
 							width={150}
@@ -242,7 +242,7 @@ export function Correspondent_Login() {
 				<div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
 					{/* Logo */}
 					<div className="flex justify-center mb-6">
-						<Image 
+						<Image
 							src='/Logo_Horizontal_wtext.svg'
 							alt="AIDWAY Logo"
 							width={150}
