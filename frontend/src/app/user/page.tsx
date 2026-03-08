@@ -1,9 +1,13 @@
-import { Navbar } from '@/components/user/navbar'
+import { Navbar } from '@/components/default/navbar'
+import { SuperButton } from '@/components/default/button'
 
 export default function Home() {
 	return (
 <>
-	<Navbar/>
+	<Navbar><>
+		<SuperButton name="Request Supplies" path="/submitRequest" variant={1}></SuperButton>
+		<SuperButton name="Manage group" path="/group" variant={1}></SuperButton>
+	</></Navbar>
 
 	<h2 className="text-red py-5 rounded-lg font-sans font-semibold text-xl">Periods don't stop in a crisis.</h2>
 	<p>AIDWAY aims to deliver period products during humanitarian disasters. Find out how to help.</p>

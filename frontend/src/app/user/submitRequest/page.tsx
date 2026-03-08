@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from 'react'
-import { Navbar } from '@/components/user/navbar'
+import { Navbar } from '@/components/default/navbar'
+import { SuperButton } from '@/components/default/button'
 
 export default function SubmitRequestPage() {
 	const [step, setStep] = useState(1)
@@ -87,7 +88,9 @@ export default function SubmitRequestPage() {
 
 	return (
 		<>
-			<Navbar />
+			<Navbar><>
+				<SuperButton name="Back" path="/" variant={0}></SuperButton>
+			</></Navbar>
 			<div className="flex items-center justify-center p-4" style={{ minHeight: 'calc(100vh - 64px)' }}>
 				<div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
 					{step === 1 ? (
