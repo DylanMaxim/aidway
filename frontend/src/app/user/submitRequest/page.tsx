@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Navbar } from '@/components/default/navbar'
 import { SuperButton } from '@/components/default/button'
 
@@ -9,7 +9,45 @@ export default function SubmitRequestPage() {
 	const [code, setCode] = useState('')
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState('')
-	const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+	const [textInput, setTextInput] = useState('')
+	const [isListening, setIsListening] = useState(false)
+	const recognitionRef = useRef<any>(null)
+
+	// Initialize speech recognition
+	useEffect(() => {
+		if (typeof window !== 'undefined') {
+			const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+			
+			if (SpeechRecognition) {
+				recognitionRef.current = new SpeechRecognition()
+				recognitionRef.current.continuous = false
+				recognitionRef.current.interimResults = false
+				recognitionRef.current.lang = 'en-US'
+
+				recognitionRef.current.onresult = (event: any) => {
+					const transcript = event.results[0][0].transcript
+					setTextInput(prev => prev + (prev ? ' ' : '') + transcript)
+					setIsListening(false)
+				}
+
+				recognitionRef.current.onerror = (event: any) => {
+					console.error('Speech recognition error:', event.error)
+					setError('Speech recognition error: ' + event.error)
+					setIsListening(false)
+				}
+
+				recognitionRef.current.onend = () => {
+					setIsListening(false)
+				}
+			}
+		}
+
+		return () => {
+			if (recognitionRef.current) {
+				recognitionRef.current.stop()
+			}
+		}
+	}, [])
 
 	// Format code input as XXX-XXX
 	const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,21 +62,19 @@ export default function SubmitRequestPage() {
 	const handleCodeSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setError('')
-
 		setStep(2)
-		return;
+		return
 
+		// Uncomment when API is ready
+		/*
 		setLoading(true)
-
 		try {
 			const response = await fetch('/api/verify-code', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ code }),
 			})
-
 			const data = await response.json()
-
 			if (data.valid) {
 				setStep(2)
 			} else {
@@ -49,15 +85,24 @@ export default function SubmitRequestPage() {
 		} finally {
 			setLoading(false)
 		}
+		*/
 	}
 
-	// Handle checkbox selection
-	const handleCheckboxChange = (option: string) => {
-		setSelectedOptions(prev =>
-			prev.includes(option)
-				? prev.filter(item => item !== option)
-				: [...prev, option]
-		)
+	// Toggle speech recognition
+	const toggleSpeechRecognition = () => {
+		if (!recognitionRef.current) {
+			setError('Speech recognition is not supported in your browser')
+			return
+		}
+
+		if (isListening) {
+			recognitionRef.current.stop()
+			setIsListening(false)
+		} else {
+			setError('')
+			recognitionRef.current.start()
+			setIsListening(true)
+		}
 	}
 
 	// Submit final form
@@ -69,7 +114,7 @@ export default function SubmitRequestPage() {
 			const response = await fetch('/api/submit-form', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ code, options: selectedOptions }),
+				body: JSON.stringify({ code, textInput }),
 			})
 
 			if (response.ok) {
@@ -77,7 +122,7 @@ export default function SubmitRequestPage() {
 				// Reset form
 				setStep(1)
 				setCode('')
-				setSelectedOptions([])
+				setTextInput('')
 			}
 		} catch (err) {
 			setError('Submission failed. Please try again.')
@@ -88,9 +133,9 @@ export default function SubmitRequestPage() {
 
 	return (
 		<>
-			<Navbar><>
-				<SuperButton name="Back" path="/" variant={0}></SuperButton>
-			</></Navbar>
+			<Navbar>
+				<SuperButton name="Back" path="/" variant={0} />
+			</Navbar>
 			<div className="flex items-center justify-center p-4" style={{ minHeight: 'calc(100vh - 64px)' }}>
 				<div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
 					{step === 1 ? (
@@ -128,7 +173,7 @@ export default function SubmitRequestPage() {
 							</form>
 						</div>
 					) : (
-						// Step 2: Checkbox Form
+						// Step 2: Text Input with Speech-to-Text
 						<div>
 							<button
 								onClick={() => setStep(1)}
@@ -137,25 +182,47 @@ export default function SubmitRequestPage() {
 								← Back to code entry
 							</button>
 
-							<h1 className="text-2xl font-bold text-gray-800 mb-2">Select Options</h1>
-							<p className="text-gray-600 mb-6">Choose all that apply</p>
+							<h1 className="text-2xl font-bold text-gray-800 mb-2">Describe Your Request</h1>
+							<p className="text-gray-600 mb-6">Type or speak your request details</p>
 
 							<form onSubmit={handleFormSubmit}>
-								<div className="space-y-3 mb-6">
-									{['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5'].map((option) => (
-										<label
-											key={option}
-											className="flex items-center p-3 border-2 border-gray-200 rounded-lg hover:border-[var(--color_red)] cursor-pointer transition-colors"
-										>
-											<input
-												type="checkbox"
-												checked={selectedOptions.includes(option)}
-												onChange={() => handleCheckboxChange(option)}
-												className="w-5 h-5 text-[var(--color_red)] rounded focus:ring-[var(--color_red)] cursor-pointer"
-											/>
-											<span className="ml-3 text-gray-700 font-medium">{option}</span>
-										</label>
-									))}
+								<div className="mb-4">
+									<textarea
+										value={textInput}
+										onChange={(e) => setTextInput(e.target.value)}
+										placeholder="Enter your request details here..."
+										rows={6}
+										className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[var(--color_red)] focus:outline-none resize-none"
+										required
+									/>
+								</div>
+
+								{/* Speech-to-Text Button */}
+								<div className="mb-4">
+									<button
+										type="button"
+										onClick={toggleSpeechRecognition}
+										className={`w-full py-3 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
+											isListening 
+												? 'bg-red-500 text-white hover:bg-red-600' 
+												: 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+										}`}
+									>
+										{isListening ? (
+											<>
+												<span className="animate-pulse">🎤</span>
+												<span>Listening...</span>
+											</>
+										) : (
+											<>
+												<span>🎤</span>
+												<span>Speak Your Request</span>
+											</>
+										)}
+									</button>
+									<p className="text-sm text-gray-500 mt-2 text-center">
+										Click to speak, your words will be added to the text above
+									</p>
 								</div>
 
 								{error && (
@@ -166,10 +233,10 @@ export default function SubmitRequestPage() {
 
 								<button
 									type="submit"
-									disabled={loading || selectedOptions.length === 0}
+									disabled={loading || textInput.trim().length === 0}
 									className="w-full bg-[var(--color_red)] text-white py-3 rounded-lg font-semibold hover:bg-[var(--color_red_tinted)] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
 								>
-									{loading ? 'Submitting...' : 'Submit Form'}
+									{loading ? 'Submitting...' : 'Submit Request'}
 								</button>
 							</form>
 						</div>

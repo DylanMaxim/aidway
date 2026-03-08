@@ -7,8 +7,26 @@ export default function Home() {
 	const router = useRouter()
 
 	useEffect(() => {
-		router.push('/login')
+		if (typeof window !== 'undefined') {
+			const charityID = localStorage.getItem("charityID")
+			if (charityID) {
+				router.push('/dashboard')
+			} else {
+				router.push('/login')
+			}
+		}
 	}, [router])
+
+	
+	// if (localStorage.getItem("charityID")) {
+	// 	useEffect(() => {
+	// 		router.push('/dashboard')
+	// 	}, [router])
+	// } else {
+	// 	useEffect(() => {
+	// 		router.push('/login')
+	// 	}, [router])
+	// }
 
 	return <div>Loading...</div>
 }

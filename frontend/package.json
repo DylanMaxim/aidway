@@ -10,8 +10,11 @@
     "train:model": "python3 backend/train_pad_model.py"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "firebase-admin": "^13.7.0",
     "leaflet": "^1.9.4",
     "next": "16.1.6",
+    "opentelemetry": "^0.1.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-leaflet": "^5.0.0"

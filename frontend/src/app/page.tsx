@@ -163,7 +163,7 @@ return (
 	<main className="min-h-screen bg-white overflow-x-hidden">
 	  <Navbar><>
 		<SuperButton name="Get Help" path="http://user.localhost:3000/" variant={1}></SuperButton>
-		<SuperButton name="Send Help" path="/http://help.localhost:3000/" variant={1}></SuperButton>
+		<SuperButton name="Send Help" path="http://charity.localhost:3000/" variant={1}></SuperButton>
 	  </></Navbar>
 
 	  {/* Hero Section */}
