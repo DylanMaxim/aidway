@@ -129,30 +129,51 @@ export default function SubmitRequestPage() {
 	}
 
 	// Submit final form
-	const handleFormSubmit = async (e: React.FormEvent) => {
-		e.preventDefault()
-		setLoading(true)
+const handleFormSubmit = async (e: React.FormEvent) => {
+	e.preventDefault()
+	setLoading(true)
+	setError("")
 
-		try {
-			const response = await fetch('/api/submit-form', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ code, textInput }),
-			})
-
-			if (response.ok) {
-				alert('Form submitted successfully!')
-				// Reset form and remove URL parameter
-				router.push('/submitRequest')
-				setStep(1)
-				setCode('')
-				setTextInput('')
-			}
-		} catch (err) {
-			setError('Submission failed. Please try again.')
-		} finally {
-			setLoading(false)
+	try {
+		const payload = {
+			campAccessCode: code.trim(),
+			userText: textInput.trim()
 		}
+
+		const res = await fetch("/api/submit-request", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(payload)
+		})
+
+		const data = await res.json()
+
+		if (!res.ok) {
+			setError("Submission failed.")
+			return
+		}
+
+		alert("Request submitted successfully!")
+
+		// reset form
+		setTextInput("")
+		router.push("/submitRequest")
+		setStep(1)
+		setCode("")
+
+	} catch (err) {
+		console.error(err)
+		setError("Submission failed.")
+	} finally {
+		setLoading(false)
+	}
+}
+
+	// Go back to step 1 and clear URL parameter
+	const handleBackToCode = () => {
+		router.push('/submitRequest')
+		setStep(1)
+		setCode('')
 	}
 
 	// Go back to step 1 and clear URL parameter

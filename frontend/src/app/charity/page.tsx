@@ -17,7 +17,7 @@ export default function Home() {
 		}
 	}, [router])
 
-	
+
 	// if (localStorage.getItem("charityID")) {
 	// 	useEffect(() => {
 	// 		router.push('/dashboard')
