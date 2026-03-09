@@ -176,6 +176,13 @@ const handleFormSubmit = async (e: React.FormEvent) => {
 		setCode('')
 	}
 
+	// Go back to step 1 and clear URL parameter
+	const handleBackToCode = () => {
+		router.push('/submitRequest')
+		setStep(1)
+		setCode('')
+	}
+
 	return (
 		<>
 			<Navbar>

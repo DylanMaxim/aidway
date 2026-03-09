@@ -4,7 +4,9 @@ import { SuperButton } from '@/components/default/button'
 
 export default function LoginPage() {
 	return (<>
-		<Navbar/>
+		<Navbar>
+			<SuperButton name="Back" path="/" variant={0} />
+		</Navbar>
 		<Correspondent_Login/>
 </>
 );}
