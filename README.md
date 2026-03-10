@@ -1,18 +1,18 @@
-# AidFlow — LeicesterCS Hackathon 2025-26 · Team 8
+# AidFlow - LeicesterCS Hackathon 2025-26 · Team 8
 
-> A humanitarian aid platform connecting charities, camp correspondents, and refugee camp residents — AI-powered sanitary product request management with QR codes, demand heatmaps, and real-time Firebase data.
+> A humanitarian aid platform connecting charities, camp correspondents, and refugee camp residents - AI-powered sanitary product request management with QR codes, demand heatmaps, and real-time Firebase data.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js) ![Firebase](https://img.shields.io/badge/Firebase-Firestore-orange?logo=firebase) ![Gemini](https://img.shields.io/badge/Google-Gemini_AI-blue?logo=google) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 
 ---
 
-## 🌍 The Problem
+## The Problem
 
 Refugee camps struggle to communicate sanitary product needs to aid organisations. There is no structured way for residents to submit requests, no real-time visibility for charities on what is needed where, and field workers lack the tools to relay information efficiently.
 
 ---
 
-## 💡 The Solution
+## The Solution
 
 AidFlow provides an end-to-end digital platform with three user roles:
 
@@ -24,20 +24,20 @@ AidFlow provides an end-to-end digital platform with three user roles:
 
 ---
 
-## ✨ Features
+## Features
 
-- 🔐 Secure email/password login for charities and correspondents (Firestore + bcrypt)
-- 🔑 Camp access code generation — registered in Firestore, verified on entry
-- 📷 QR code generator — deep-links residents to their camp's request flow
-- 🤖 AI Health Chatbot — Google Gemini conversational intake, exports structured JSON
-- 📋 Request form — speech-to-text enabled, pre-fills camp code from QR scan
-- 📊 Demand heatmap — per-product, per-camp colour-coded analytics table
-- 🗺️ Interactive camp map — Leaflet map with risk-level circle markers
-- 📈 Pad demand prediction — custom ML model forecasts next-month needs
+- Secure email/password login for charities and correspondents (Firestore + bcrypt)
+- Camp access code generation - registered in Firestore, verified on entry
+- QR code generator - deep-links residents to their camp's request flow
+- AI Health Chatbot - Google Gemini conversational intake, exports structured JSON
+- Request form - speech-to-text enabled, pre-fills camp code from QR scan
+- Demand heatmap - per-product, per-camp colour-coded analytics table
+- Interactive camp map - Leaflet map with risk-level circle markers
+- Pad demand prediction - custom ML model forecasts next-month needs
 
 ---
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -52,7 +52,7 @@ AidFlow provides an end-to-end digital platform with three user roles:
 
 ---
 
-## 👥 User Flows
+## User Flows
 
 ### 1. Charity Admin
 ```
@@ -73,13 +73,13 @@ user.localhost:3000/group/login → /group/dashboard
 ### 3. Camp Resident (QR Scan)
 ```
 /user/landing?code=CAMPCODE
-├── /chatbot       — AI-guided conversational intake
-└── /test/camp     — Direct request form (code pre-filled)
+├── /chatbot       - AI-guided conversational intake
+└── /test/camp     - Direct request form (code pre-filled)
 ```
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js ≥ 18
@@ -129,7 +129,7 @@ npm run dev
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 frontend/
@@ -160,6 +160,6 @@ frontend/
 
 ---
 
-## 🤝 Team
+## Team
 
-**LeicesterCS Hackathon 2025-2026 — Team 8**
+**LeicesterCS Hackathon 2025-2026 - Team 8**
