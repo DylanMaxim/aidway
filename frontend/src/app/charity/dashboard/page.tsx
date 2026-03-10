@@ -27,9 +27,14 @@ export default function Dashboard() {
 		}
 	}, [router])
 
-	// Access code state
-	const [generatedCode, setGeneratedCode] = useState("")
-	const [copied, setCopied] = useState(false)
+	// Create camp form state
+	const [campName, setCampName] = useState("")
+	const [campLocation, setCampLocation] = useState("")
+	const [correspondentName, setCorrespondentName] = useState("")
+	const [correspondentEmail, setCorrespondentEmail] = useState("")
+	const [creatingCamp, setCreatingCamp] = useState(false)
+	const [createError, setCreateError] = useState("")
+	const [createdCampCode, setCreatedCampCode] = useState("")
 
 	// Camp summary state
 	const [campId, setCampId] = useState("")
@@ -45,42 +50,50 @@ export default function Dashboard() {
 	// Camp map state
 	const [campMapData, setCampMapData] = useState<any>(null)
 
-	// ── Generate access code ──────────────────────────────────────────────
-	async function generateCampAccessCode() {
-		const value = Math.floor(Math.random() * 0xffffff)
-		const code = value.toString(16).toUpperCase().padStart(6, "0")
+	// ── Create New Camp ──────────────────────────────────────────────
+	async function handleCreateCamp(e: React.FormEvent) {
+		e.preventDefault()
+		setCreateError("")
+		setCreatingCamp(true)
+		setCreatedCampCode("")
 
 		try {
-			const rawCodes = localStorage.getItem("validCampAccessCodes")
-			const existing = rawCodes ? JSON.parse(rawCodes) : []
-			const codeSet = new Set(Array.isArray(existing) ? existing : [])
-			codeSet.add(code)
-			localStorage.setItem("validCampAccessCodes", JSON.stringify([...codeSet]))
-		} catch (e) {
-			console.error("Failed to store access code locally:", e)
-		}
-
-		// Persist to Firestore so correspondents can verify it
-		try {
-			await fetch('/api/register-camp-code', {
+			const response = await fetch('/api/create-camp', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ campCode: code }),
+				body: JSON.stringify({
+					campName,
+					campLocation,
+					correspondentName,
+					correspondentEmail,
+					charityID: localStorage.getItem("charityID")
+				}),
 			})
-		} catch (e) {
-			console.error("Failed to persist camp code to Firebase:", e)
+
+			const data = await response.json()
+
+			if (!response.ok) {
+				setCreateError(data.error || "Failed to create camp")
+				return
+			}
+
+			// Success - show camp code
+			setCreatedCampCode(data.campCode)
+			
+			// Clear form
+			setCampName("")
+			setCampLocation("")
+			setCorrespondentName("")
+			setCorrespondentEmail("")
+
+			alert(`Camp created successfully!\n\nCamp Code: ${data.campCode}\n\nA one-time access code has been emailed to ${correspondentEmail}`)
+
+		} catch (err) {
+			console.error("Error creating camp:", err)
+			setCreateError("Something went wrong. Please try again.")
+		} finally {
+			setCreatingCamp(false)
 		}
-
-		setGeneratedCode(code)
-		setCampId(code)
-		setCopied(false)
-	}
-
-	function copyCode() {
-		if (!generatedCode) return
-		navigator.clipboard.writeText(generatedCode)
-		setCopied(true)
-		setTimeout(() => setCopied(false), 2000)
 	}
 
 	// ── Camp summary ──────────────────────────────────────────────────────
@@ -121,31 +134,117 @@ export default function Dashboard() {
 
 			<div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
 
-				{/* ── Generate Camp Access Code ── */}
+				{/* ── Create New Camp ── */}
 				<section className="bg-white rounded-lg border border-gray-200 p-6">
-					<h2 className="text-xl font-semibold text-gray-800 mb-4">Generate Camp Access Code</h2>
-					<button
-						onClick={generateCampAccessCode}
-						className="w-full bg-[var(--color_red)] text-white py-2.5 rounded-lg font-semibold hover:bg-[var(--color_red_tinted)] transition-colors"
-					>
-						Generate Camp Access Code
-					</button>
-					<div className="flex items-center gap-3 mt-3">
-						<div className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg font-mono text-sm font-semibold tracking-widest">
-							{generatedCode || "No code generated yet"}
+					<h2 className="text-xl font-semibold text-gray-800 mb-2">Create New Camp</h2>
+					<p className="text-sm text-gray-600 mb-4">
+						Register a new camp and send access credentials to the correspondent
+					</p>
+
+					<form onSubmit={handleCreateCamp} className="space-y-4">
+						{/* Camp Details */}
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div>
+								<label className="block text-sm font-medium text-gray-700 mb-1">
+									Camp Name
+								</label>
+								<input
+									type="text"
+									className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[var(--color_red)] focus:outline-none"
+									value={campName}
+									onChange={e => setCampName(e.target.value)}
+									placeholder="e.g. Refugee Camp Alpha"
+									required
+								/>
+							</div>
+
+							<div>
+								<label className="block text-sm font-medium text-gray-700 mb-1">
+									Camp Location
+								</label>
+								<input
+									type="text"
+									className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[var(--color_red)] focus:outline-none"
+									value={campLocation}
+									onChange={e => setCampLocation(e.target.value)}
+									placeholder="e.g. Northern Region"
+									required
+								/>
+							</div>
 						</div>
-						{generatedCode && (
-							<button
-								onClick={copyCode}
-								className={`px-4 py-2 rounded-lg text-sm font-semibold border transition-colors ${copied
-									? 'bg-green-700 text-white border-green-700'
-									: 'bg-white text-gray-800 border-gray-300 hover:bg-gray-50'
-									}`}
-							>
-								{copied ? "Copied!" : "Copy"}
-							</button>
+
+						{/* Correspondent Details */}
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div>
+								<label className="block text-sm font-medium text-gray-700 mb-1">
+									Correspondent Name
+								</label>
+								<input
+									type="text"
+									className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[var(--color_red)] focus:outline-none"
+									value={correspondentName}
+									onChange={e => setCorrespondentName(e.target.value)}
+									placeholder="e.g. John Doe"
+									required
+								/>
+							</div>
+
+							<div>
+								<label className="block text-sm font-medium text-gray-700 mb-1">
+									Correspondent Email
+								</label>
+								<input
+									type="email"
+									className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[var(--color_red)] focus:outline-none"
+									value={correspondentEmail}
+									onChange={e => setCorrespondentEmail(e.target.value)}
+									placeholder="correspondent@email.com"
+									required
+								/>
+							</div>
+						</div>
+
+						{/* Error Message */}
+						{createError && (
+							<div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+								{createError}
+							</div>
 						)}
-					</div>
+
+						{/* Created Camp Code Display */}
+						{createdCampCode && (
+							<div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+								<p className="text-sm font-semibold text-green-800 mb-2">
+									✅ Camp created successfully!
+								</p>
+								<div className="flex items-center gap-2">
+									<span className="text-sm text-green-700">Camp Code:</span>
+									<span className="font-mono font-bold text-green-900 text-lg">
+										{createdCampCode}
+									</span>
+								</div>
+								<p className="text-xs text-green-600 mt-2">
+									A one-time access code has been sent to {correspondentEmail}
+								</p>
+							</div>
+						)}
+
+						{/* Submit Button */}
+						<button
+							type="submit"
+							disabled={creatingCamp}
+							className="w-full bg-[var(--color_red)] text-white py-2.5 rounded-lg font-semibold hover:bg-[var(--color_red_tinted)] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+						>
+							{creatingCamp ? (
+								<span className="flex items-center justify-center gap-2">
+									<span className="animate-spin">⏳</span>
+									Creating Camp...
+								</span>
+							) : (
+								'Create Camp & Send Credentials'
+							)}
+						</button>
+					</form>
 				</section>
 
 				{/* ── Camp Summary ── */}
