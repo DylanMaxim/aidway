@@ -50,6 +50,23 @@ export default function Dashboard() {
 	// Camp map state
 	const [campMapData, setCampMapData] = useState<any>(null)
 
+	// Fulfil order state
+	const [fulfilCampId, setFulfilCampId] = useState("")
+	const [fulfilledCampOrders, setFulfilledCampOrders] = useState<string[]>([])
+
+	// Load fulfilled orders from localStorage
+	useEffect(() => {
+		if (typeof window === 'undefined') return
+		try {
+			const raw = localStorage.getItem("fulfilledCampOrders")
+			const parsed = raw ? JSON.parse(raw) : []
+			setFulfilledCampOrders(Array.isArray(parsed) ? parsed : [])
+		} catch (error) {
+			console.error("Failed to load fulfilled orders:", error)
+			setFulfilledCampOrders([])
+		}
+	}, [])
+
 	// ── Create New Camp ──────────────────────────────────────────────
 	async function handleCreateCamp(e: React.FormEvent) {
 		e.preventDefault()
@@ -124,6 +141,21 @@ export default function Dashboard() {
 		const res = await fetch('/api/camp-map-data')
 		const data = await res.json()
 		setCampMapData(data)
+	}
+
+	// ── Fulfil order (frontend-only) ──────────────────────────────────────
+	function handleFulfilOrder() {
+		const normalizedCampId = fulfilCampId.trim()
+		if (!normalizedCampId) {
+			alert("Please enter a camp ID")
+			return
+		}
+
+		const updated = [...new Set([...fulfilledCampOrders, normalizedCampId])]
+		setFulfilledCampOrders(updated)
+		localStorage.setItem("fulfilledCampOrders", JSON.stringify(updated))
+		alert(`Order for camp ${normalizedCampId} has been marked as fulfilled`)
+		setFulfilCampId("")
 	}
 
 	return (
@@ -368,6 +400,42 @@ export default function Dashboard() {
 							<CampMap camps={campMapData.camps || []} />
 						</div>
 					)}
+				</section>
+
+				{/* ── Fulfil Order ── */}
+				<section className="bg-white rounded-lg border border-gray-200 p-6">
+					<h2 className="text-xl font-semibold text-gray-800 mb-4">Fulfil Order</h2>
+					<div className="space-y-3">
+						<div>
+							<label className="block text-sm font-medium text-gray-700 mb-1">Camp ID</label>
+							<input
+								className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-[var(--color_red)] focus:outline-none"
+								value={fulfilCampId}
+								onChange={e => setFulfilCampId(e.target.value)}
+								placeholder="Enter camp ID / access code"
+							/>
+						</div>
+						<button
+							type="button"
+							onClick={handleFulfilOrder}
+							className="w-full bg-[var(--color_red)] text-white py-2.5 rounded-lg font-semibold hover:bg-[var(--color_red_tinted)] transition-colors"
+						>
+							Fulfil Order
+						</button>
+					</div>
+
+					<div className="mt-4">
+						<h3 className="text-sm font-medium text-gray-700 mb-2">Fulfilled Orders</h3>
+						{fulfilledCampOrders.length === 0 ? (
+							<p className="text-sm text-gray-500">No fulfilled orders yet.</p>
+						) : (
+							<ul className="list-disc pl-5 text-sm text-gray-700 space-y-1">
+								{fulfilledCampOrders.map((id) => (
+									<li key={id}>{id}</li>
+								))}
+							</ul>
+						)}
+					</div>
 				</section>
 
 			</div>
