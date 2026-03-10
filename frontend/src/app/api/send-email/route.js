@@ -1,49 +1,43 @@
-import nodemailer from 'nodemailer';
+import emailjs from '@emailjs/nodejs';
 
 export async function POST(request) {
 	try {
 		const body = await request.json();
-		const { to, subject, html, text } = body;
+		const { to, subject, templateParams } = body;
 
-		if (!to || !subject || (!html && !text)) {
+		if (!to) {
 			return Response.json(
-				{ error: "Missing required fields: to, subject, and html/text" },
+				{ error: "Recipient email is required" },
 				{ status: 400 }
 			);
 		}
 
-		// Create transporter using environment variables
-		const transporter = nodemailer.createTransport({
-			host: process.env.SMTP_HOST,
-			port: parseInt(process.env.SMTP_PORT || '587'),
-			secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
-			auth: {
-				user: process.env.SMTP_USER,
-				pass: process.env.SMTP_PASS,
+		// Send email using EmailJS
+		const response = await emailjs.send(
+			process.env.EMAILJS_SERVICE_ID,
+			process.env.EMAILJS_TEMPLATE_ID,
+			{
+				to_email: to,
+				...templateParams
 			},
-		});
+			{
+				publicKey: process.env.EMAILJS_PUBLIC_KEY,
+				privateKey: process.env.EMAILJS_PRIVATE_KEY,
+			}
+		);
 
-		// Send email
-		const info = await transporter.sendMail({
-			from: process.env.SMTP_FROM || `"Aidway" <${process.env.SMTP_USER}>`,
-			to,
-			subject,
-			text: text || '', // Plain text fallback
-			html: html || text,
-		});
-
-		console.log("Email sent successfully:", info.messageId);
+		console.log('Email sent successfully:', response);
 
 		return Response.json({
 			success: true,
-			messageId: info.messageId,
+			messageId: response.text,
 			message: `Email sent to ${to}`
 		});
 
 	} catch (error) {
-		console.error("Error sending email:", error);
+		console.error('Error sending email:', error);
 		return Response.json(
-			{ error: "Failed to send email.", details: error.message },
+			{ error: 'Failed to send email.', details: error.text || error.message },
 			{ status: 500 }
 		);
 	}

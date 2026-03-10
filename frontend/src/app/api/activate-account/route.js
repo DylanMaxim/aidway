@@ -1,4 +1,4 @@
-import { db } from "../../../backend/firebaseAdmin";
+import { db } from "../../../../backend/firebaseAdmin";
 import * as bcrypt from 'bcrypt';
 
 export async function POST(request) {

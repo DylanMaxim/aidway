@@ -1,4 +1,4 @@
-import { db } from "../../../../backend/firebaseAdmin";  //"../../../backend/firebaseAdmin";
+import { db } from "../../../../backend/firebaseAdmin";
 import * as bcrypt from 'bcrypt';
 
 // Helper to generate random codes
@@ -59,7 +59,7 @@ export async function POST(request) {
 			name: correspondentName,
 			email: correspondentEmail.toLowerCase(),
 			oneTimeCode,
-			password: null, // Will be set when they activate
+			password: null,
 			status: "pending",
 			createdAt: new Date().toISOString(),
 			lastLogin: null
@@ -67,32 +67,28 @@ export async function POST(request) {
 
 		const correspondentRef = await db.collection("correspondents").add(correspondentData);
 
-		// Send email with one-time code
+		// Send email with EmailJS
 		try {
-			await fetch(process.env.EMAIL_API_ENDPOINT || '/api/send-email', {
+			const emailResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/send-email`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					to: correspondentEmail,
-					subject: 'Your Camp Access Credentials - Aidway',
-					html: `
-						<h2>Welcome to Aidway</h2>
-						<p>Hello ${correspondentName},</p>
-						<p>A camp has been created for you:</p>
-						<ul>
-							<li><strong>Camp Name:</strong> ${campName}</li>
-							<li><strong>Location:</strong> ${campLocation}</li>
-							<li><strong>Camp Code:</strong> <code>${campCode}</code></li>
-						</ul>
-						<p>To activate your account and set your password, use this one-time access code:</p>
-						<h3 style="font-family: monospace; font-size: 24px; background: #f3f4f6; padding: 12px; border-radius: 8px; display: inline-block;">${oneTimeCode}</h3>
-						<p>Visit the correspondent login page and use the "Activate Account" section.</p>
-						<p>This code can only be used once.</p>
-						<br>
-						<p>Best regards,<br>The Aidway Team</p>
-					`
+					templateParams: {
+						correspondent_name: correspondentName,
+						camp_name: campName,
+						camp_location: campLocation,
+						camp_code: campCode,
+						one_time_code: oneTimeCode
+					}
 				})
 			});
+
+			if (!emailResponse.ok) {
+				console.error("Email API returned error");
+			} else {
+				console.log("Email sent successfully to:", correspondentEmail);
+			}
 		} catch (emailError) {
 			console.error("Failed to send email:", emailError);
 			// Continue anyway - camp is created
