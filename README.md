@@ -2,8 +2,6 @@
 
 > A humanitarian aid platform connecting charities, camp correspondents, and refugee camp residents - AI-powered sanitary product request management with QR codes, demand heatmaps, and real-time Firebase data.
 
-![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js) ![Firebase](https://img.shields.io/badge/Firebase-Firestore-orange?logo=firebase) ![Gemini](https://img.shields.io/badge/Google-Gemini_AI-blue?logo=google) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
-
 ---
 
 ## The Problem
