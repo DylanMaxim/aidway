@@ -99,7 +99,7 @@ function SubmitRequestContent() {
 			})
 			const data = await response.json()
 			if (data.valid) {
-				router.push(`/submitRequest?id=${code}`, { scroll: false })
+				router.push(`/user/submitRequest?id=${code}`, { scroll: false })
 				setStep(2)
 			} else {
 				setError('Invalid code. Please try again.')
@@ -158,7 +158,7 @@ function SubmitRequestContent() {
 
 			// reset form
 			setTextInput("")
-			router.push("/submitRequest")
+			router.push("/user/submitRequest")
 			setStep(1)
 			setCode("")
 
