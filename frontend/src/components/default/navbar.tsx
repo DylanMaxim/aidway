@@ -7,9 +7,9 @@ export function Navbar({ children }: { children?: React.ReactNode }) {
 				<div className="flex items-center justify-between h-16">
 					{/* Logo / root button */}
 					<div className="flex-shrink-0">
-						<a href="http://localhost:3000" className="text-[var(--color_red)] text-xl font-bold"><Image src='/Logo_Horizontal_wtext.svg' alt="AIDWAY Logo" width={180} height={0}/></a>
+						<a href="/" className="text-[var(--color_red)] text-xl font-bold"><Image src='/Logo_Horizontal_wtext.svg' alt="AIDWAY Logo" width={180} height={0} /></a>
 					</div>
-					
+
 					<div className="flex items-center gap-6">
 						{children}
 					</div>

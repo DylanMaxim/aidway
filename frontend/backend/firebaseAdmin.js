@@ -35,7 +35,10 @@ export const db = new Proxy(
   {},
   {
     get(_, prop) {
-      return getDb()[prop];
+      const target = getDb();
+      const value = target[prop];
+      // Bind functions to the real Firestore instance so `this` is correct
+      return typeof value === 'function' ? value.bind(target) : value;
     },
   }
 );
