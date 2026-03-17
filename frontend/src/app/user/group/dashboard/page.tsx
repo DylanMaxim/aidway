@@ -26,9 +26,9 @@ export default function GroupDashboard() {
 			if (typeof window === 'undefined') return
 
 			const correspondentID = localStorage.getItem("correspondentID")
-			
+
 			if (!correspondentID) {
-				router.push('/group/login')
+				router.push('/user/group/login')
 				return
 			}
 
@@ -46,7 +46,7 @@ export default function GroupDashboard() {
 				}
 
 				setCorrespondentData(data.correspondent)
-				
+
 				// Get camp ID from correspondent data
 				const code = data.correspondent.campID
 				if (!code) {
@@ -69,35 +69,35 @@ export default function GroupDashboard() {
 
 	// Generate QR URLs when camp ID is loaded
 	useEffect(() => {
-	if (!campID) return
+		if (!campID) return
 
-	async function fetchCode() {
-		try {
-		const res = await fetch(`/api/camp_formcode?id=${encodeURIComponent(campID)}`)
-		const data = await res.json()
+		async function fetchCode() {
+			try {
+				const res = await fetch(`/api/camp_formcode?id=${encodeURIComponent(campID)}`)
+				const data = await res.json()
 
-		if (!res.ok || !data.success) {
-			setError("Failed to generate form code")
-			return
+				if (!res.ok || !data.success) {
+					setError("Failed to generate form code")
+					return
+				}
+
+				setCode(data.code)
+
+				const origin = window.location.origin
+				//http://user.localhost:3000/submitRequest?id=TL5-5RK
+				setCampUrl(`${origin}/user/submitRequest?id=${encodeURIComponent(`${data.code.slice(0, 3)}-${data.code.slice(3, 6)}`)}`)
+
+				const rootHost = window.location.hostname.replace(/^[^.]+\./, '')
+				const port = window.location.port ? `:${window.location.port}` : ''
+				// setCampFormUrl(`${window.location.protocol}//${rootHost}${port}/test/camp?code=${encodeURIComponent(data.code)}`)
+
+			} catch (err) {
+				console.error(err)
+				setError("Failed to generate form code")
+			}
 		}
 
-		setCode(data.code)
-
-		const origin = window.location.origin
-		//http://user.localhost:3000/submitRequest?id=TL5-5RK
-		setCampUrl(`${origin}/submitRequest?id=${encodeURIComponent(`${data.code.slice(0,3)}-${data.code.slice(3,6)}`)}`)
-
-		const rootHost = window.location.hostname.replace(/^[^.]+\./, '')
-		const port = window.location.port ? `:${window.location.port}` : ''
-		// setCampFormUrl(`${window.location.protocol}//${rootHost}${port}/test/camp?code=${encodeURIComponent(data.code)}`)
-
-		} catch (err) {
-		console.error(err)
-		setError("Failed to generate form code")
-		}
-	}
-
-	fetchCode()
+		fetchCode()
 
 	}, [campID])
 
@@ -118,7 +118,7 @@ export default function GroupDashboard() {
 	return (
 		<>
 			<Navbar>
-				<SuperButton name="Log out" path="/group/logout" variant={0} />
+				<SuperButton name="Log out" path="/user/group/logout" variant={0} />
 			</Navbar>
 
 			<div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
@@ -141,7 +141,7 @@ export default function GroupDashboard() {
 							<p className="text-sm">{error}</p>
 						</div>
 						<button
-							onClick={() => router.push('/group/login')}
+							onClick={() => router.push('/user/group/login')}
 							className="mt-4 w-full bg-[var(--color_red)] text-white py-2.5 rounded-lg font-semibold hover:bg-[var(--color_red_tinted)] transition-colors"
 						>
 							Return to Login
@@ -213,7 +213,7 @@ export default function GroupDashboard() {
 							<p className="text-sm text-gray-500 mb-4">
 								Open the AI chatbot to collect detailed product needs through a guided conversation.
 							</p>
-							<a href="/chatbot">
+							<a href="/user/chatbot">
 								<button className="w-full bg-[var(--color_red)] text-white py-2.5 rounded-lg font-semibold hover:bg-[var(--color_red_tinted)] transition-colors">
 									Go to Chatbot
 								</button>

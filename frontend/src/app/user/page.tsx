@@ -47,15 +47,15 @@ export default function Home() {
       {/* Navbar with your specific buttons */}
       <Navbar>
         <div className="flex gap-4">
-          <SuperButton name="Request Supplies" path="/submitRequest" variant={1} />
-          <SuperButton name="Manage group" path="/group" variant={1} />
+          <SuperButton name="Request Supplies" path="/user/submitRequest" variant={1} />
+          <SuperButton name="Manage group" path="/user/group" variant={1} />
         </div>
       </Navbar>
 
       {/* Hero Section: The "Impact" Look */}
       <div className="relative min-h-[85vh] flex items-center px-8 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image 
+          <Image
             src="/supplies.jpg"
             alt="Aid Background"
             fill
@@ -73,7 +73,7 @@ export default function Home() {
               <span className="text-[var(--color_red)]">in a crisis.</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-200 mb-10 leading-relaxed">
-              AIDWAY aims to deliver period products during humanitarian disasters. 
+              AIDWAY aims to deliver period products during humanitarian disasters.
               Find out how to help and ensure dignity for all.
             </p>
             <button className="bg-[var(--color_red)] text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-red-700 transition-all shadow-xl hover:shadow-red-900/20">
@@ -130,7 +130,7 @@ export default function Home() {
             </div>
           </div>
           <div className="flex-1 relative w-full aspect-video rounded-3xl overflow-hidden shadow-2xl">
-            <Image 
+            <Image
               src="https://images.unsplash.com/photo-1594708767771-a7502209ff51?auto=format&fit=crop&q=80"
               alt="Aid Distribution"
               fill

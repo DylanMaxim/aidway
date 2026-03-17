@@ -333,7 +333,7 @@ export default function Home() {
 					</p>
 					<div className="flex flex-col sm:flex-row gap-4 justify-center">
 						<a
-							href="/submitRequest"
+							href="/user/submitRequest"
 							className="bg-white text-[var(--color_red)] px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg hover:shadow-xl"
 						>
 							Request Supplies

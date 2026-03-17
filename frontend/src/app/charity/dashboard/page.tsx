@@ -43,7 +43,7 @@ export default function Dashboard() {
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
 			const charityID = localStorage.getItem("charityID")
-			if (!charityID) router.push('/login')
+			if (!charityID) router.push('/charity/login')
 		}
 	}, [router])
 
@@ -116,7 +116,7 @@ export default function Dashboard() {
 
 			// Success - show camp code
 			setCreatedCampCode(data.campCode)
-			
+
 			// Clear form
 			setCampName("")
 			setCampLocation("")
@@ -181,7 +181,7 @@ export default function Dashboard() {
 	return (
 		<>
 			<Navbar>
-				<SuperButton name="Log out" path="/logout" variant={0} />
+				<SuperButton name="Log out" path="/charity/logout" variant={0} />
 			</Navbar>
 
 			<div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
