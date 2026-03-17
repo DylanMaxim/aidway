@@ -1,11 +1,12 @@
 "use client"
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Navbar } from '@/components/default/navbar'
 import { SuperButton } from '@/components/default/button'
 
-export default function SubmitRequestPage() {
+function SubmitRequestContent() {
+
 	const router = useRouter()
 	const searchParams = useSearchParams()
 	const [step, setStep] = useState(1)
@@ -35,7 +36,7 @@ export default function SubmitRequestPage() {
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
 			const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-			
+
 			if (SpeechRecognition) {
 				recognitionRef.current = new SpeechRecognition()
 				recognitionRef.current.continuous = false
@@ -83,7 +84,7 @@ export default function SubmitRequestPage() {
 
 		// Update URL with the code
 		router.push(`/submitRequest?id=${code}`, { scroll: false })
-		
+
 		setStep(2)
 		return
 
@@ -129,45 +130,45 @@ export default function SubmitRequestPage() {
 	}
 
 	// Submit final form
-const handleFormSubmit = async (e: React.FormEvent) => {
-	e.preventDefault()
-	setLoading(true)
-	setError("")
+	const handleFormSubmit = async (e: React.FormEvent) => {
+		e.preventDefault()
+		setLoading(true)
+		setError("")
 
-	try {
-		const payload = {
-			campAccessCode: code.trim(),
-			userText: textInput.trim()
-		}
+		try {
+			const payload = {
+				campAccessCode: code.trim(),
+				userText: textInput.trim()
+			}
 
-		const res = await fetch("/api/submit-request", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(payload)
-		})
+			const res = await fetch("/api/submit-request", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload)
+			})
 
-		const data = await res.json()
+			const data = await res.json()
 
-		if (!res.ok) {
+			if (!res.ok) {
+				setError("Submission failed.")
+				return
+			}
+
+			alert("Request submitted successfully!")
+
+			// reset form
+			setTextInput("")
+			router.push("/submitRequest")
+			setStep(1)
+			setCode("")
+
+		} catch (err) {
+			console.error(err)
 			setError("Submission failed.")
-			return
+		} finally {
+			setLoading(false)
 		}
-
-		alert("Request submitted successfully!")
-
-		// reset form
-		setTextInput("")
-		router.push("/submitRequest")
-		setStep(1)
-		setCode("")
-
-	} catch (err) {
-		console.error(err)
-		setError("Submission failed.")
-	} finally {
-		setLoading(false)
 	}
-}
 
 	// Go back to step 1 and clear URL parameter
 	const handleBackToCode = () => {
@@ -188,7 +189,7 @@ const handleFormSubmit = async (e: React.FormEvent) => {
 						<div>
 							<h1 className="text-2xl font-bold text-gray-800 mb-2">Enter Access Code</h1>
 							<p className="text-gray-600 mb-6">Please enter your code in the format XXX-XXX</p>
-							
+
 							<form onSubmit={handleCodeSubmit}>
 								<div className="mb-4">
 									<input
@@ -248,11 +249,10 @@ const handleFormSubmit = async (e: React.FormEvent) => {
 									<button
 										type="button"
 										onClick={toggleSpeechRecognition}
-										className={`w-full py-3 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
-											isListening 
-												? 'bg-red-500 text-white hover:bg-red-600' 
-												: 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-										}`}
+										className={`w-full py-3 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${isListening
+											? 'bg-red-500 text-white hover:bg-red-600'
+											: 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+											}`}
 									>
 										{isListening ? (
 											<>
@@ -290,5 +290,13 @@ const handleFormSubmit = async (e: React.FormEvent) => {
 				</div>
 			</div>
 		</>
+	)
+}
+
+export default function SubmitRequestPage() {
+	return (
+		<Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+			<SubmitRequestContent />
+		</Suspense>
 	)
 }
