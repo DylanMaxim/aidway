@@ -10,9 +10,9 @@ export default function Home() {
 		if (typeof window !== 'undefined') {
 			const charityID = localStorage.getItem("charityID")
 			if (charityID) {
-				router.push('/dashboard')
+				router.push('/charity/dashboard')
 			} else {
-				router.push('/login')
+				router.push('/charity/login')
 			}
 		}
 	}, [router])

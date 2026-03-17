@@ -8,7 +8,7 @@ export default function Logout() {
 
 	useEffect(() => {
 		localStorage.removeItem("correspondentID")
-		router.push('/group/login')
+		router.push('/user/group/login')
 	}, [router])
-	
+
 }

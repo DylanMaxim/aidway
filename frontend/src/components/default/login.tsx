@@ -19,7 +19,7 @@ export function Charity_Login() {
 		if (typeof window !== 'undefined') {
 			const charityID = localStorage.getItem("charityID")
 			if (charityID) {
-				router.push('/dashboard')
+				router.push('/charity/dashboard')
 			}
 		}
 	}, [router])
@@ -41,7 +41,7 @@ export function Charity_Login() {
 			if (response.ok) {
 				// Redirect to charity dashboard
 				localStorage.setItem("charityID", data.user.id);
-				router.push('/dashboard')
+				router.push('/charity/dashboard')
 			} else {
 				setError(data.message || 'Invalid credentials')
 			}
@@ -206,7 +206,7 @@ export function Correspondent_Login() {
 		if (typeof window !== 'undefined') {
 			const correspondentID = localStorage.getItem("correspondentID")
 			if (correspondentID) {
-				router.push('/group/dashboard')
+				router.push('/user/group/dashboard')
 			}
 		}
 	}, [router])
@@ -228,7 +228,7 @@ export function Correspondent_Login() {
 			if (response.ok) {
 				// Redirect to correspondent dashboard
 				localStorage.setItem("correspondentID", data.user.id);
-				router.push('/group/dashboard')
+				router.push('/user/group/dashboard')
 			} else {
 				setError(data.message || 'Invalid credentials')
 			}
@@ -382,14 +382,14 @@ export function Correspondent_Login() {
 						</button>
 					</form>
 
-					
+
 					{/* Divider */}
 					<div className="mt-8 mb-6 flex items-center">
 						<div className="flex-1 border-t border-gray-300"></div>
 						<span className="px-4 text-sm text-gray-500">OR</span>
 						<div className="flex-1 border-t border-gray-300"></div>
 					</div>
-							
+
 					<p className='mb-2 font-bold'>Activate correspondent account</p>
 
 					<form onSubmit={handleActivate}>

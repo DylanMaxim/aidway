@@ -8,7 +8,7 @@ export default function Logout() {
 
 	useEffect(() => {
 		localStorage.removeItem("charityID")
-		router.push('/login')
+		router.push('/charity/login')
 	}, [router])
-	
+
 }

@@ -10,9 +10,9 @@ export default function Home() {
 		if (typeof window !== 'undefined') {
 			const correspondentID = localStorage.getItem("correspondentID")
 			if (correspondentID) {
-				router.push('/group/dashboard')
+				router.push('/user/group/dashboard')
 			} else {
-				router.push('/group/login')
+				router.push('/user/group/login')
 			}
 		}
 	}, [router])

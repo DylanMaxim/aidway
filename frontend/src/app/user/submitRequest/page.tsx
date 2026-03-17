@@ -172,7 +172,7 @@ function SubmitRequestContent() {
 
 	// Go back to step 1 and clear URL parameter
 	const handleBackToCode = () => {
-		router.push('/submitRequest')
+		router.push('/user/submitRequest')
 		setStep(1)
 		setCode('')
 	}
