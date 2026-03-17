@@ -1,5 +1,8 @@
+export const dynamic = "force-dynamic";
+
 import { getPadPrediction } from "../../../../backend/getPadPrediction";
 import { db } from "../../../../backend/firebaseAdmin";
+
 
 export async function GET(request) {
   try {
